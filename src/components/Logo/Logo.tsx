@@ -1,13 +1,13 @@
-import React from 'react';
-import logoImg from '../../assets/images/logo.png'
-import styles from './Logo.module.css';
+import React from "react";
+import logoImg from "../../assets/images/logo.png";
+import styles from "./Logo.module.css";
 
 interface LogoProps {
   width?: string;
   height?: string;
 }
 
-const Logo: React.FC<LogoProps> = ({ width = 'auto' }) => {
+const Logo: React.FC<LogoProps> = ({ width = "auto" }) => {
   return (
     <div className={styles.logoContainer}>
       <img

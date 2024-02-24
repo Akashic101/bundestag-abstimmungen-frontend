@@ -1,14 +1,14 @@
 .logoContainer {
-    display: flex;
-    align-items: center;
-    height: 100%;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .logo {
-    width: auto;
-    height: 100%;
+  width: auto;
+  height: 100%;
 }
 
 .title {
-    margin-left: 10px;
+  margin-left: 10px;
 }
