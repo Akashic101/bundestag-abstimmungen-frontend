@@ -4,10 +4,12 @@ import TopTen from "./components/TopTen/TopTen.tsx";
 import WorstTen from "./components/WorstTen/WorstTen.tsx";
 import "@mantine/charts/styles.css";
 import { Divider } from "@mantine/core";
+import HeaderSearch from './components/HeaderSearch/HeaderSearch.tsx'
 
 function App() {
   return (
     <div className="root">
+      <HeaderSearch/>
       <TopTen />
       <Divider my="md" />
       <WorstTen />
