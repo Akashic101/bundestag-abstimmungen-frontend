@@ -32,7 +32,7 @@ function SpecificMember() {
   const [fraktionGruppen, setFraktionGruppen] = useState([]);
   const [mitgliederDerFraktion, setMitgliederDerFraktion] = useState([]);
   const [aktuellesMitglied, setAktuellesMitglied] = useState("");
-  const [donutChartData, setDonutChartData] = useState<DonutChartData[]>([]); 
+  const [donutChartData, setDonutChartData] = useState<DonutChartData[]>([]);
   const [datum, setDatum] = useState<[Date | null, Date | null]>([null, null]);
 
   useEffect(() => {
@@ -51,10 +51,8 @@ function SpecificMember() {
       });
   }, []);
 
-
   useEffect(() => {
     fetch(`http://localhost:3000/fraktiongruppe`)
-
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -146,38 +144,42 @@ function SpecificMember() {
 
   return (
     <div className={styles.specificMember}>
-    <Title order={1}>Spezifischer Abgeordneter</Title>
-    <Title order={5}>Daten von {datum[0]?.toString()} - {datum[1]?.toString()}</Title>
-    <Grid>
-      <Grid.Col span={5}>
-        <NativeSelect
-          label="Fraktion/Gruppe"
-          description="Wähle die Fraktion/Gruppe aus"
-          onChange={(event) => setAktuelleFraktion(event.currentTarget.value)}
-          value={aktuelleFraktion}
-          data={fraktionGruppen}
-        />
-      </Grid.Col>
-      <Grid.Col span={5}>
-        <NativeSelect
-          label="Abgeordneter"
-          description="Wähle den Abgeordneten der ausgewählten Partei aus"
-          value={aktuellesMitglied}
-          disabled={!aktuelleFraktion}
-          onChange={(event) => setAktuellesMitglied(event.currentTarget.value)}
-          data={mitgliederDerFraktion}
-        />
-      </Grid.Col>
-      <Grid.Col span={2}>
-        <DonutChart
-          paddingAngle={2}
-          withLabelsLine
-          withLabels
-          chartLabel={aktuellesMitglied}
-          data={donutChartData}
-        />
-      </Grid.Col>
-    </Grid>
+      <Title order={1}>Spezifischer Abgeordneter</Title>
+      <Title order={5}>
+        Daten von {datum[0]?.toString()} - {datum[1]?.toString()}
+      </Title>
+      <Grid>
+        <Grid.Col span={5}>
+          <NativeSelect
+            label="Fraktion/Gruppe"
+            description="Wähle die Fraktion/Gruppe aus"
+            onChange={(event) => setAktuelleFraktion(event.currentTarget.value)}
+            value={aktuelleFraktion}
+            data={fraktionGruppen}
+          />
+        </Grid.Col>
+        <Grid.Col span={5}>
+          <NativeSelect
+            label="Abgeordneter"
+            description="Wähle den Abgeordneten der ausgewählten Partei aus"
+            value={aktuellesMitglied}
+            disabled={!aktuelleFraktion}
+            onChange={(event) =>
+              setAktuellesMitglied(event.currentTarget.value)
+            }
+            data={mitgliederDerFraktion}
+          />
+        </Grid.Col>
+        <Grid.Col span={2}>
+          <DonutChart
+            paddingAngle={2}
+            withLabelsLine
+            withLabels
+            chartLabel={aktuellesMitglied}
+            data={donutChartData}
+          />
+        </Grid.Col>
+      </Grid>
     </div>
   );
 }

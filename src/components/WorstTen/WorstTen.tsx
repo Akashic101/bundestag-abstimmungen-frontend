@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Title } from "@mantine/core";
 import { BarChart } from "@mantine/charts";
 import "@mantine/charts/styles.css";
-import styles from "./TopTen.module.css";
+import styles from "./WorstTen.module.css";
 
 const getColor = (name) => {
   switch (name) {
@@ -21,7 +21,7 @@ const getColor = (name) => {
   }
 };
 
-const TopTen = () => {
+const WorstTen = () => {
   const [barChartData, setBarChartData] = useState([]);
   const [datum, setDatum] = useState<[Date | null, Date | null]>([null, null]);
 
@@ -42,7 +42,7 @@ const TopTen = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/data/top10`)
+    fetch(`http://localhost:3000/data/worst10`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -74,7 +74,7 @@ const TopTen = () => {
 
     return (
       <div className={styles.topTen}>
-        <Title order={1}>Top 10</Title>
+        <Title order={1}>Worst 10</Title>
         <Title order={5}>
           Daten von {datum[0]?.toString()} - {datum[1]?.toString()}
         </Title>
@@ -94,4 +94,4 @@ const TopTen = () => {
   return <DynamicBarChart data={barChartData} />;
 };
 
-export default TopTen;
+export default WorstTen;
