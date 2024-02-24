@@ -3,6 +3,7 @@ import { Title } from "@mantine/core";
 import { BarChart } from "@mantine/charts";
 import "@mantine/charts/styles.css";
 import styles from "./WorstTen.module.css";
+import { SegmentedControl } from '@mantine/core';
 
 const getColor = (name) => {
   switch (name) {
@@ -24,9 +25,10 @@ const getColor = (name) => {
 const WorstTen = () => {
   const [barChartData, setBarChartData] = useState([]);
   const [datum, setDatum] = useState<[Date | null, Date | null]>([null, null]);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
 
   useEffect(() => {
-    fetch(`http://localhost:3000/data/top10/datum`)
+    fetch(`http://localhost:3000/data/datum`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -34,7 +36,8 @@ const WorstTen = () => {
         return response.json();
       })
       .then((data) => {
-        setDatum(data);
+        const formattedDatum = data.map((dateString) => new Date(dateString));
+        setDatum(formattedDatum);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -42,7 +45,12 @@ const WorstTen = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/data/worst10`)
+
+    if(selectedYear == 'Alle') {
+      setSelectedYear('')
+    }
+
+    fetch(`http://localhost:3000/data/worst10/${selectedYear}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -55,7 +63,7 @@ const WorstTen = () => {
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
-  }, []);
+  }, [selectedYear]);
 
   const DynamicBarChart = ({ data }) => {
     const keys = data.reduce((allKeys, item) => {
@@ -76,8 +84,9 @@ const WorstTen = () => {
       <div className={styles.topTen}>
         <Title order={1}>Worst 10</Title>
         <Title order={5}>
-          Daten von {datum[0]?.toString()} - {datum[1]?.toString()}
+          Daten von {datum[0]?.toLocaleDateString('de-DE')} - {datum[1]?.toLocaleDateString('de-DE')}
         </Title>
+        <SegmentedControl value={selectedYear} onChange={setSelectedYear} data={['Alle', `${new Date().getFullYear()}`, `${new Date().getFullYear()-1}`, `${new Date().getFullYear()-2}`]} />
         <BarChart
           h={300}
           data={data}

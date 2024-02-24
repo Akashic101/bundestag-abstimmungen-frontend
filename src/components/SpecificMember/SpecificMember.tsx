@@ -36,7 +36,7 @@ function SpecificMember() {
   const [datum, setDatum] = useState<[Date | null, Date | null]>([null, null]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/data/top10/datum`)
+    fetch(`http://localhost:3000/data/datum`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -44,7 +44,8 @@ function SpecificMember() {
         return response.json();
       })
       .then((data) => {
-        setDatum(data);
+        const formattedDatum = data.map((dateString) => new Date(dateString));
+        setDatum(formattedDatum);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -146,8 +147,8 @@ function SpecificMember() {
     <div className={styles.specificMember}>
       <Title order={1}>Spezifischer Abgeordneter</Title>
       <Title order={5}>
-        Daten von {datum[0]?.toString()} - {datum[1]?.toString()}
-      </Title>
+          Daten von {datum[0]?.toLocaleDateString('de-DE')} - {datum[1]?.toLocaleDateString('de-DE')}
+        </Title>
       <Grid>
         <Grid.Col span={5}>
           <NativeSelect
