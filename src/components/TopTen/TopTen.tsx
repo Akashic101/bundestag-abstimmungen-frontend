@@ -23,6 +23,23 @@ const getColor = (name) => {
 
 const TopTen = () => {
   const [barChartData, setBarChartData] = useState([]);
+  const [datum, setDatum] = useState<[Date | null, Date | null]>([null, null]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/data/top10/datum`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setDatum(data);
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }, []);
 
   useEffect(() => {
     fetch(`http://localhost:3000/data/top10`)
@@ -58,6 +75,7 @@ const TopTen = () => {
     return (
       <div className={styles.topTen}>
         <Title order={1}>Top 10</Title>
+        <Title order={5}>Daten von {datum[0]?.toString()} - {datum[1]?.toString()}</Title>
         <BarChart
           h={300}
           data={data}

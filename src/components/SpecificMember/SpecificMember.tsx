@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { NativeSelect, Grid } from "@mantine/core";
+import { NativeSelect, Grid, Title } from "@mantine/core";
 import { DonutChart } from "@mantine/charts";
 import "@mantine/charts/styles.css";
+import styles from "./SpecificMember.module.css";
 
 interface DonutChartData {
   name: string;
@@ -31,10 +32,29 @@ function SpecificMember() {
   const [fraktionGruppen, setFraktionGruppen] = useState([]);
   const [mitgliederDerFraktion, setMitgliederDerFraktion] = useState([]);
   const [aktuellesMitglied, setAktuellesMitglied] = useState("");
-  const [donutChartData, setDonutChartData] = useState<DonutChartData[]>([]);
+  const [donutChartData, setDonutChartData] = useState<DonutChartData[]>([]); 
+  const [datum, setDatum] = useState<[Date | null, Date | null]>([null, null]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/data/top10/datum`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setDatum(data);
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }, []);
+
 
   useEffect(() => {
     fetch(`http://localhost:3000/fraktiongruppe`)
+
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -125,8 +145,11 @@ function SpecificMember() {
   }, [aktuelleFraktion, aktuellesMitglied]);
 
   return (
+    <div className={styles.specificMember}>
+    <Title order={1}>Spezifischer Abgeordneter</Title>
+    <Title order={5}>Daten von {datum[0]?.toString()} - {datum[1]?.toString()}</Title>
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col span={5}>
         <NativeSelect
           label="Fraktion/Gruppe"
           description="Wähle die Fraktion/Gruppe aus"
@@ -135,7 +158,7 @@ function SpecificMember() {
           data={fraktionGruppen}
         />
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={5}>
         <NativeSelect
           label="Abgeordneter"
           description="Wähle den Abgeordneten der ausgewählten Partei aus"
@@ -145,7 +168,7 @@ function SpecificMember() {
           data={mitgliederDerFraktion}
         />
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={2}>
         <DonutChart
           paddingAngle={2}
           withLabelsLine
@@ -155,6 +178,7 @@ function SpecificMember() {
         />
       </Grid.Col>
     </Grid>
+    </div>
   );
 }
 
